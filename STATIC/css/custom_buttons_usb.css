@@ -1,0 +1,31 @@
+/* USB-Mode checkbox */
+input#usb-mode {
+    display: none;
+}
+
+.disableusb img {
+    display: none;
+}
+
+input#usb-mode:checked ~ .disableusb img {
+    display: initial;
+}
+
+input#usb-mode:checked ~ .enableusb img {
+    display: none;
+}
+
+/* USB-Mode images */
+.disable_usb_img {
+    border-radius: 50%;
+    border: 1px solid #0000FF;
+    max-width:50%;
+    max-height:50%;
+}
+
+.enable_usb_img {
+    border-radius: 50%;
+    border: 1px solid #4CAF50;
+    max-width:50%;
+    max-height:50%;
+}

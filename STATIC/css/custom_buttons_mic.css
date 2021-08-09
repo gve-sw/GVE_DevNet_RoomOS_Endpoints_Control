@@ -1,0 +1,31 @@
+/* Mute/Unmute checkbox */
+input#un-mute {
+    display: none;
+}
+
+.unmute img {
+    display: none;
+}
+
+input#un-mute:checked ~ .unmute img {
+    display: initial;
+}
+
+input#un-mute:checked ~ .mute img {
+    display: none;
+}
+
+/* Mute/Unmute images */
+.mute_img {
+    border-radius: 50%;
+    border: 2px solid #f44336;
+    max-width:50%;
+    max-height:50%;
+}
+
+.unmute_img {
+    border-radius: 50%;
+    border: 2px solid #4CAF50;
+    max-width:50%;
+    max-height:50%;
+}

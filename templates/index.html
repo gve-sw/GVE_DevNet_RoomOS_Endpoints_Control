@@ -1,0 +1,496 @@
+<!-- Copyright (c) 2021 Cisco and/or its affiliates.
+
+This software is licensed to you under the terms of the Cisco Sample
+Code License, Version 1.1 (the "License"). You may obtain a copy of the
+License at
+
+https://developer.cisco.com/docs/licenses
+
+All use of the material herein must be in accordance with the terms of
+the License. All rights not expressly granted by the License are
+reserved. Unless required by applicable law or agreed to separately in
+writing, software distributed under the License is distributed on an "AS
+IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+or implied. -->
+
+<!doctype html>
+<html lang="en">
+
+<head>
+    <title>Control Cisco Endpoints - Demo</title>
+
+    <!-- Using Cisco UI Kit -->
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='css/cui-standard.min.css') }}">
+
+    <!-- CSS for Custom buttons -->
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='css/custom_buttons_mic.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='css/custom_buttons_usb.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='css/custom_camera_nav.css') }}">
+
+    <!-- Using AJAX to send get & post http requests -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.2/jquery.min.js"></script>
+
+    <!-- Functions -->
+    <script>
+
+        var theme_counter = 0;
+        // Change themee selected
+        function changeTheme() {
+            var panel = document.getElementById("buttons-panel");
+            switch (theme_counter) {
+                case 0:
+                    panel.style.color = "white";
+                    panel.style.backgroundImage = "url(/static/icons/Night.png)";
+                    theme_counter = 1;
+                    break;
+                case 1:
+                    panel.style.color = "black";
+                    panel.style.backgroundImage = "";
+                    theme_counter = 2;
+                    break;
+                case 2:
+                    panel.style.color = "white";
+                    panel.style.backgroundImage = "url(/static/icons/Morning.png)";
+                    theme_counter = 0;
+                    break;
+            }
+        }
+
+        // Mute clicked
+        function mute() {
+            var today = new Date();
+            var time = ('0' + today.getHours()).substr(-2) + ":" + ('0' + today.getMinutes()).substr(-2) + ":" + ('0' + today.getSeconds()).substr(-2);
+            var action = "mute";
+            device_ip_address = document.getElementById("device-ip-address").value;
+            text = time + " - Action: (" + action + ") on device: " + device_ip_address;
+            var summary_area = document.getElementById("summary");
+            summary_area.value += text + "\n";
+            summary_area.scrollTop = summary_area.scrollHeight;
+
+            $.post('/mute_device',
+                {
+                    device_ip_address: device_ip_address,
+                    action: action
+                }).done(function (response) {
+                    var today = new Date();
+                    var time = ('0' + today.getHours()).substr(-2) + ":" + ('0' + today.getMinutes()).substr(-2) + ":" + ('0' + today.getSeconds()).substr(-2);
+                    text = time + " - Mic muted: (" + response + ")";
+                    var summary_area = document.getElementById("summary");
+                    summary_area.value += text + "\n";
+                    summary_area.scrollTop = summary_area.scrollHeight;
+
+                    // Change the mic icon only after the response is recieved
+                    var mute_btn = document.getElementById("mute-button");
+                    var mute_btn_img = document.getElementById("mute-btn-img");
+                    if (response == 'True') {
+                        mute_btn.setAttribute("class", "mute_img");
+                        mute_btn_img.src = "{{ url_for('static',filename='icons/mute.svg') }}";
+                    } else {
+                        mute_btn.setAttribute("class", "unmute_img");
+                        mute_btn_img.src = "{{ url_for('static',filename='icons/microphone.svg') }}";
+                    }
+
+                });
+
+        }
+
+
+        // Enable USB Mode clicked
+        function enableUSBMode() {
+            var today = new Date();
+            var time = ('0' + today.getHours()).substr(-2) + ":" + ('0' + today.getMinutes()).substr(-2) + ":" + ('0' + today.getSeconds()).substr(-2);
+            var action = "enable-usb-mode";
+            device_ip_address = document.getElementById("device-ip-address").value;
+            text = time + " - Action: (" + action + ") on device: " + device_ip_address;
+            var summary_area = document.getElementById("summary");
+            summary_area.value += text + "\n";
+            summary_area.scrollTop = summary_area.scrollHeight;
+
+            $.post('/enable_usb_mode',
+                {
+                    device_ip_address: device_ip_address,
+                    action: action
+                }).done(function (response) {
+                    var today = new Date();
+                    var time = ('0' + today.getHours()).substr(-2) + ":" + ('0' + today.getMinutes()).substr(-2) + ":" + ('0' + today.getSeconds()).substr(-2);
+                    text = time + " - USB-Mode: (" + response + ")";
+                    var summary_area = document.getElementById("summary");
+                    summary_area.value += text + "\n";
+                    summary_area.scrollTop = summary_area.scrollHeight;
+                });
+
+        }
+
+        // Disable USB Mode clicked
+        function disableUSBMode() {
+            var today = new Date();
+            var time = ('0' + today.getHours()).substr(-2) + ":" + ('0' + today.getMinutes()).substr(-2) + ":" + ('0' + today.getSeconds()).substr(-2);
+            var action = "disable-usb-mode";
+            device_ip_address = document.getElementById("device-ip-address").value;
+            text = time + " - Action: (" + action + ") on device: " + device_ip_address;
+            var summary_area = document.getElementById("summary");
+            summary_area.value += text + "\n";
+            summary_area.scrollTop = summary_area.scrollHeight;
+
+            $.post('/disable_usb_mode',
+                {
+                    device_ip_address: device_ip_address,
+                    action: action
+                }).done(function (response) {
+                    var today = new Date();
+                    var time = ('0' + today.getHours()).substr(-2) + ":" + ('0' + today.getMinutes()).substr(-2) + ":" + ('0' + today.getSeconds()).substr(-2);
+                    text = time + " - USB-Mode: (" + response + ")";
+                    var summary_area = document.getElementById("summary");
+                    summary_area.value += text + "\n";
+                    summary_area.scrollTop = summary_area.scrollHeight;
+                });
+
+        }
+
+        // Camera navigation pad clicked
+        function moveCamera(element) {
+            var today = new Date();
+            var time = ('0' + today.getHours()).substr(-2) + ":" + ('0' + today.getMinutes()).substr(-2) + ":" + ('0' + today.getSeconds()).substr(-2);
+            var action = "move-camera";
+
+            // Getting which direction was clicked, based on class
+            var direction = element.className;
+            device_ip_address = document.getElementById("device-ip-address").value;
+
+            // Getting camera id from the dropdown list
+            var camera_id = document.getElementById("list_of_cameras").value;
+            text = time + " - Action: (" + action + "-" + camera_id + ") to direction: " + direction;
+            var summary_area = document.getElementById("summary");
+            summary_area.value += text + "\n";
+            summary_area.scrollTop = summary_area.scrollHeight;
+
+            $.post('/move_camera',
+                {
+                    device_ip_address: device_ip_address,
+                    camera_id: camera_id,
+                    direction: direction
+                }).done(function (response) {
+                    var today = new Date();
+                    var time = ('0' + today.getHours()).substr(-2) + ":" + ('0' + today.getMinutes()).substr(-2) + ":" + ('0' + today.getSeconds()).substr(-2);
+                    text = time + " - camera position: (" + response + ")";
+                    var summary_area = document.getElementById("summary");
+                    summary_area.value += text + "\n";
+                    summary_area.scrollTop = summary_area.scrollHeight;
+                });
+
+        }
+
+        // Volume Slider moved
+        function sliderVolume(element) {
+            var today = new Date();
+            var time = ('0' + today.getHours()).substr(-2) + ":" + ('0' + today.getMinutes()).substr(-2) + ":" + ('0' + today.getSeconds()).substr(-2);
+            var action = "volume-slider";
+
+            // Getting value of the slider
+            var volume_level = element.value;
+
+            // Updating web page elements
+            var vol_as_text = document.getElementById("volume-as-text");
+            vol_as_text.innerHTML = volume_level;
+
+            text = time + " - Action: (" + action + ") to level: " + volume_level;
+            var summary_area = document.getElementById("summary");
+            summary_area.value += text + "\n";
+            summary_area.scrollTop = summary_area.scrollHeight;
+
+            $.post('/change_volume_level',
+                {
+                    volume_level: volume_level
+                }).done(function (response) {
+                    var today = new Date();
+                    var time = ('0' + today.getHours()).substr(-2) + ":" + ('0' + today.getMinutes()).substr(-2) + ":" + ('0' + today.getSeconds()).substr(-2);
+                    text = time + " - volume-changed: (" + response + ")";
+                    var summary_area = document.getElementById("summary");
+                    summary_area.value += text + "\n";
+                    summary_area.scrollTop = summary_area.scrollHeight;
+                });
+
+        }
+
+
+        // Lower volume clicked
+        function lowerVolume() {
+            var today = new Date();
+            var time = ('0' + today.getHours()).substr(-2) + ":" + ('0' + today.getMinutes()).substr(-2) + ":" + ('0' + today.getSeconds()).substr(-2);
+            var action = "volume-lower";
+
+            // Updating web page elements
+            var vol_as_text = document.getElementById("volume-as-text");
+            var volume_level = vol_as_text.innerHTML;
+            vol_as_text.innerHTML = parseInt(volume_level) - 5;
+
+            var vol_slider = document.getElementById("volume-range");
+            vol_slider.value = vol_as_text.innerHTML;
+            sliderVolume(vol_slider);
+        }
+
+        // Increase volume clicked
+        function increaseVolume() {
+            var today = new Date();
+            var time = ('0' + today.getHours()).substr(-2) + ":" + ('0' + today.getMinutes()).substr(-2) + ":" + ('0' + today.getSeconds()).substr(-2);
+            var action = "volume-higher";
+
+            // Updating web page elements
+            var vol_as_text = document.getElementById("volume-as-text");
+            var volume_level = vol_as_text.innerHTML;
+            vol_as_text.innerHTML = parseInt(volume_level) + 5;
+
+            var vol_slider = document.getElementById("volume-range");
+            vol_slider.value = vol_as_text.innerHTML;
+            sliderVolume(vol_slider);
+        }
+
+        // Dial button clicked
+        function dial() {
+            var today = new Date();
+            var time = ('0' + today.getHours()).substr(-2) + ":" + ('0' + today.getMinutes()).substr(-2) + ":" + ('0' + today.getSeconds()).substr(-2);
+            var action = "dial";
+
+            var number_to_dial_area = document.getElementById("number-to-dial");
+            var number_to_dial = number_to_dial_area.value;
+            if (number_to_dial == "") {
+                alert('Please enter number/URI to dial');
+            }
+
+            text = time + " - Action: (" + action + ") to: " + number_to_dial;
+            var summary_area = document.getElementById("summary");
+            summary_area.value += text + "\n";
+            summary_area.scrollTop = summary_area.scrollHeight;
+
+            $.post('/dial',
+                {
+                    number_to_dial: number_to_dial
+                }).done(function (response) {
+                    var today = new Date();
+                    var time = ('0' + today.getHours()).substr(-2) + ":" + ('0' + today.getMinutes()).substr(-2) + ":" + ('0' + today.getSeconds()).substr(-2);
+                    text = time + " - dialing... : (" + response + ")";
+                    var summary_area = document.getElementById("summary");
+                    summary_area.value += text + "\n";
+                    summary_area.scrollTop = summary_area.scrollHeight;
+                });
+
+
+        }
+
+    </script>
+
+</head>
+
+<body class="cui">
+
+    <!-- Main Header -->
+    <nav class="header" id="styleguideheader" role="navigation">
+        <div class="container-fluid">
+            <div class="header-panels">
+                <div class="header-panel hidden-md-down">
+                    <a class="header__logo" href="http://www.cisco.com" target="_blank">
+                        <span class="icon-cisco"></span>
+                    </a>
+                    <h1 class="header__title">
+                        <span>Control Cisco Endpoints - Demo</span>
+                    </h1>
+                </div>
+                <div class="header-panel header-panel--center base-margin-left base-margin-right hidden-lg-up">
+                    <a class="header__logo" href="http://www.cisco.com" target="_blank">
+                        <span class="icon-cisco"></span>
+                    </a>
+                </div>
+                <div class="header-panel header-panel--right hidden-md-down">
+                    <a href="../logout" class="header-item" title="Logout"><span
+                            class="btn btn--ghost">Logout</span></a>
+                    <a href="../" class="header-item" title="Home"><span class="icon-home"></span></a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Content -->
+    <div class="content content--alt">
+        <div class="container-fluid">
+
+            <!-- Header Demo -->
+            <div class="panel panel--loose panel--raised base-margin-top" style="overflow: hidden;">
+                <h5 style="display: inline-block;" class="title">Device address: {{ device_ip_address }} </h5>
+                <button id="change-theme" style="float:right; height:50px;width:50px" onclick=changeTheme()
+                    title="Click to change the theme"><img
+                        src="{{ url_for('static',filename='icons/brightness.svg') }}"></button>
+            </div>
+
+            <!-- Panel for buttons -->
+            <div id="buttons-panel" class="panel panel--loose panel--raised base-margin-top"
+                style="color: white; background-position: center; background-repeat: no-repeat; background-size: cover; background-image: url(/static/icons/Morning.png); overflow: hidden;">
+
+                <!-- Camera navigation -->
+                <div class="set" style="display: inline-block;">
+                    <!-- Choosing camera Area -->
+                    <h5 for="list_of_cameras">Move Camera:
+                        <span>
+                            <select id="list_of_cameras">
+                                <ul>
+                                    {% for camera in system_info.connected_cameras %}
+                                    <option class="btn btn--secondary" value={{ camera }}>
+                                        Camera {{ camera }}
+                                    </option>
+                                    {% endfor %}
+                                </ul>
+                            </select>
+                        </span>
+                    </h5>
+
+                    <!-- Camera Navigation d-pad -->
+                    <nav class="o-pad">
+                        <a class="up" onclick=moveCamera(this)></a>
+                        <a class="right" onclick=moveCamera(this)></a>
+                        <a class="down" onclick=moveCamera(this)></a>
+                        <a class="left" onclick=moveCamera(this)></a>
+                    </nav>
+                </div>
+
+                <!-- USB-Mode Button -->
+                <div class="set" style="float: right;">
+                    <h5>USB Mode</h5>
+                    <!-- Enable USB mode -->
+                    <button id="enable-usb-button" onclick=enableUSBMode() class="enable_usb_img"
+                        title="Click to Enable USB Mode" style="height:85px;width:85px"><img
+                            src="{{ url_for('static',filename='icons/usb.svg') }}"></button>
+
+                    <!-- Disable USB mode -->
+                    <button id="disable-usb-button" onclick=disableUSBMode() class="disable_usb_img"
+                        title="Click to Disable USB Mode" style="height:85px;width:85px"><img
+                            src="{{ url_for('static',filename='icons/video-input.svg') }}"></button>
+                </div>
+
+                <div class="form-group base-margin-top">
+                    <!-- Call Control -->
+                    <div class="set" style="display: inline-block; ">
+                        <h5>Call Control</h5>
+                        <!-- Call TextArea -->
+                        <div class="form-group__text" style="display: inline-block; background: white;">
+                            <textarea id="number-to-dial" rows="1" class="hover"
+                                placeholder="Enter URI/Number"></textarea>
+                            <!-- Call Button -->
+                        </div>
+                        <button id="dial-button" style="height:50px;width:50px" onclick=dial() class="unmute_img"
+                            title="Click to dial"><img
+                                src="{{ url_for('static',filename='icons/phone.svg') }}"></button>
+                    </div>
+
+                    <!-- Volume Control -->
+                    <div class="set" style="float: right;">
+                        <h5>Volume Control</h5>
+                        <div style="display: inline-block;">
+                            <!-- Volume Level -->
+                            <button style="height:40px;width:40px" id="lower-volume-button" onclick=lowerVolume()
+                                title="Lower volume"><img
+                                    src="{{ url_for('static',filename='icons/audio-min.svg') }}"></button>&nbsp;
+                            <input id="volume-range" type="range" min="0" max="100" value={{ system_info.volume }}
+                                class="slider" onchange="sliderVolume(this)">
+                            <h6 id="volume-as-text" style="display: inline-block;">{{ system_info.volume }}</h6>
+                            <button style="height:40px;width:40px" id="increase-volume-button" onclick=increaseVolume()
+                                title="Increase volume"><img
+                                    src="{{ url_for('static',filename='icons/audio-plus.svg') }}"></button>
+
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+                            <!-- Mute Button (as a button) -->
+                            {% if system_info.is_muted %}
+                            <button id="mute-button" style="height:60px;width:60px" onclick=mute() class="mute_img"
+                                title="Click to unmute"><img id="mute-btn-img"
+                                    src="{{ url_for('static',filename='icons/mute.svg') }}"></button>
+                            {% else %}
+                            <button id="mute-button" style="height:60px;width:60px" onclick=mute() class="unmute_img"
+                                title="Click to mute"><img id="mute-btn-img"
+                                    src="{{ url_for('static',filename='icons/microphone.svg') }}"></button>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+
+            <!-- Summary Area Content -->
+            <div class="row">
+
+                <!-- Left Rail -->
+                <div class="col">
+                    <div class="section">
+
+                        <!-- Device info Area -->
+                        <div class="panel panel--loose panel--raised base-margin-top">
+
+                            <!-- device address Area -->
+                            <div class="form-group base-margin-top">
+                                <div class="form-group__text">
+                                    <label for="username">Device Address:</label>
+                                    <textarea id="device-ip-address" rows="1" class="hover"
+                                        disabled>{{ device_ip_address }}</textarea>
+                                </div>
+                            </div>
+
+                        </div>
+
+
+                    </div>
+                </div>
+
+                <!-- Right Rail -->
+                <div class="col">
+                    <div class="section">
+
+                        <!-- Summary Area -->
+                        <div class="panel panel--loose panel--raised base-margin-top">
+
+                            <!-- Summary Area -->
+                            <div class="form-group base-margin-top">
+                                <div class="form-group__text" style="height: 150px;">
+                                    <label for="summary">Summary:<br></label>
+                                    <textarea id="summary"
+                                        disabled>System info:&#13;&#10; is_muted: {{ system_info.is_muted }}&#13;&#10; connected_cameras: {{ system_info.connected_cameras }}&#13;&#10;</textarea>
+                                </div>
+                            </div>
+                        </div>
+
+
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <div class="footer__links">
+                <ul class="list list--inline">
+                    <li><a href="http://www.cisco.com/cisco/web/siteassets/contacts/index.html"
+                            target="_blank">Contacts</a>
+                    </li>
+                    <li><a href="https://secure.opinionlab.com/ccc01/o.asp?id=jBjOhqOJ" target="_blank">Feedback</a>
+                    </li>
+                    <li><a href="https://www.cisco.com/c/en/us/about/help.html" target="_blank">Help</a></li>
+                    <li><a href="http://www.cisco.com/c/en/us/about/sitemap.html" target="_blank">Site Map</a></li>
+                    <li><a href="https://www.cisco.com/c/en/us/about/legal/terms-conditions.html" target="_blank">Terms
+                            & Conditions</a></li>
+                    </li>
+                    <li><a href="https://www.cisco.com/c/en/us/about/legal/privacy-full.html" target="_blank">Privacy
+                            Statement</a></li>
+                    <li><a href="https://www.cisco.com/c/en/us/about/legal/privacy-full.html#cookies"
+                            target="_blank">Cookie
+                            Policy</a></li>
+                    <li><a href="https://www.cisco.com/c/en/us/about/legal/trademarks.html"
+                            target="_blank">Trademarks</a></li>
+                </ul>
+            </div>
+        </footer>
+
+    </div>
+
+
+</body>
+
+</html>
